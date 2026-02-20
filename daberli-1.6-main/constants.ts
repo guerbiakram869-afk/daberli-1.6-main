@@ -1,0 +1,128 @@
+import { Ad, Wilaya } from './types';
+
+export const WILAYAS: Wilaya[] = [
+  { code: '01', name: 'Adrar' },
+  { code: '02', name: 'Chlef' },
+  { code: '03', name: 'Laghouat' },
+  { code: '04', name: 'Oum El Bouaghi' },
+  { code: '05', name: 'Batna' },
+  { code: '06', name: 'Béjaïa' },
+  { code: '07', name: 'Biskra' },
+  { code: '08', name: 'Béchar' },
+  { code: '09', name: 'Blida' },
+  { code: '10', name: 'Bouïra' },
+  { code: '11', name: 'Tamanrasset' },
+  { code: '12', name: 'Tébessa' },
+  { code: '13', name: 'Tlemcen' },
+  { code: '14', name: 'Tiaret' },
+  { code: '15', name: 'Tizi Ouzou' },
+  { code: '16', name: 'Algiers' },
+  { code: '17', name: 'Djelfa' },
+  { code: '18', name: 'Jijel' },
+  { code: '19', name: 'Sétif' },
+  { code: '20', name: 'Saïda' },
+  { code: '21', name: 'Skikda' },
+  { code: '22', name: 'Sidi Bel Abbès' },
+  { code: '23', name: 'Annaba' },
+  { code: '24', name: 'Guelma' },
+  { code: '25', name: 'Constantine' },
+  { code: '26', name: 'Médéa' },
+  { code: '27', name: 'Mostaganem' },
+  { code: '28', name: "M'Sila" },
+  { code: '29', name: 'Mascara' },
+  { code: '30', name: 'Ouargla' },
+  { code: '31', name: 'Oran' },
+  { code: '32', name: 'El Bayadh' },
+  { code: '33', name: 'Illizi' },
+  { code: '34', name: 'Bordj Bou Arréridj' },
+  { code: '35', name: 'Boumerdès' },
+  { code: '36', name: 'El Tarf' },
+  { code: '37', name: 'Tindouf' },
+  { code: '38', name: 'Tissemsilt' },
+  { code: '39', name: 'El Oued' },
+  { code: '40', name: 'Khenchela' },
+  { code: '41', name: 'Souk Ahras' },
+  { code: '42', name: 'Tipaza' },
+  { code: '43', name: 'Mila' },
+  { code: '44', name: 'Aïn Defla' },
+  { code: '45', name: 'Naâma' },
+  { code: '46', name: 'Aïn Témouchent' },
+  { code: '47', name: 'Ghardaïa' },
+  { code: '48', name: 'Relizane' },
+  { code: '49', name: 'El M\'Ghair' },
+  { code: '50', name: 'El Meniaa' },
+  { code: '51', name: 'Ouled Djellal' },
+  { code: '52', name: 'Bordj Baji Mokhtar' },
+  { code: '53', name: 'Béni Abbès' },
+  { code: '54', name: 'Timimoun' },
+  { code: '55', name: 'Touggourt' },
+  { code: '56', name: 'Djanet' },
+  { code: '57', name: 'In Salah' },
+  { code: '58', name: 'In Guezzam' },
+];
+
+export const MOCK_ADS: Ad[] = [
+  {
+    id: '1',
+    title: 'Renault Clio 4 GT Line 2019',
+    category: 'auto',
+    price: 3500,
+    currency: 'DZD/day',
+    location: 'Algiers',
+    image: 'https://picsum.photos/400/300',
+    isVerified: true,
+    isBoosted: true,
+    datePosted: '2 days ago',
+    details: {
+      Year: 2019,
+      Fuel: 'Essence'
+    }
+  },
+  {
+    id: '2',
+    title: 'F3 Apartment in Centre Ville',
+    category: 'real-estate',
+    price: 45000,
+    currency: 'DZD/month',
+    location: 'Oran',
+    image: 'https://picsum.photos/401/300',
+    isVerified: true,
+    isBoosted: true,
+    datePosted: '1 week ago',
+    details: {
+      Area: '85m²',
+      Floor: 3
+    }
+  },
+  {
+    id: '3',
+    title: 'Senior React Developer',
+    category: 'jobs',
+    price: 120000, // Monthly Salary
+    currency: 'DZD',
+    location: 'Remote / Algiers',
+    image: 'https://picsum.photos/402/300',
+    isVerified: false,
+    isBoosted: false,
+    datePosted: 'Just now',
+    details: {
+      Type: 'Full-time'
+    }
+  },
+  {
+    id: '4',
+    title: 'Professional Electrician - Home Repair',
+    category: 'services',
+    price: 2000,
+    currency: 'DZD/visit',
+    location: 'Blida',
+    image: 'https://picsum.photos/403/300',
+    isVerified: true,
+    isBoosted: true,
+    rating: 4.8,
+    datePosted: 'Active',
+    details: {
+      Exp: '10 Years'
+    }
+  },
+];
