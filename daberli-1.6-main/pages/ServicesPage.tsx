@@ -1,8 +1,8 @@
+import { Search, Wrench } from 'lucide-react';
 import React from 'react';
 import Navbar from '../components/Navbar';
 import ServiceCard from '../components/cards/ServiceCard';
-import { User, Ad } from '../types';
-import { Filter, Search, Wrench } from 'lucide-react';
+import { Ad, User } from '../types';
 
 interface CategoryPageProps {
   user: User | null;

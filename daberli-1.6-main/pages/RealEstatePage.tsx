@@ -1,8 +1,8 @@
+import { Home } from 'lucide-react';
 import React from 'react';
 import Navbar from '../components/Navbar';
 import RealEstateCard from '../components/cards/RealEstateCard';
-import { User, Ad } from '../types';
-import { Filter, Search, Home } from 'lucide-react';
+import { Ad, User } from '../types';
 
 interface CategoryPageProps {
   user: User | null;

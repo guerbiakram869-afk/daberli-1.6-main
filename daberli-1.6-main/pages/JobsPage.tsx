@@ -1,8 +1,8 @@
+import { Briefcase, Search } from 'lucide-react';
 import React from 'react';
 import Navbar from '../components/Navbar';
 import JobCard from '../components/cards/JobCard';
-import { User, Ad } from '../types';
-import { Filter, Search, Briefcase } from 'lucide-react';
+import { Ad, User } from '../types';
 
 interface CategoryPageProps {
   user: User | null;
