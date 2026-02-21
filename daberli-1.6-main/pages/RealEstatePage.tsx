@@ -1,5 +1,5 @@
 import { Home } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import RealEstateCard from '../components/cards/RealEstateCard';
 import { Ad, User } from '../types';
@@ -13,7 +13,15 @@ interface CategoryPageProps {
 }
 
 const RealEstatePage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPostAdClick, ads }) => {
-  const reAds = ads.filter(ad => ad.category === 'real-estate');
+    const [listingTypeFilter, setListingTypeFilter] = useState('');
+    const [propertyTypeFilter, setPropertyTypeFilter] = useState('');
+
+    const reAds = ads.filter(ad => {
+        if (ad.category !== 'real-estate') return false;
+        if (listingTypeFilter && ad.listingType !== listingTypeFilter) return false;
+        if (propertyTypeFilter && ad.propertyType !== propertyTypeFilter) return false;
+        return true;
+    });
 
   return (
     <div className="min-h-screen bg-stone-50 font-serif">
@@ -47,12 +55,35 @@ const RealEstatePage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut
                   <div className="flex-1 bg-gray-50 rounded px-4 border border-gray-200">
                       <input type="text" placeholder="City, Neighborhood..." className="bg-transparent w-full py-3 focus:outline-none text-gray-900" />
                   </div>
-                  <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
-                       <select className="bg-transparent w-full py-3 focus:outline-none text-gray-600" aria-label="Property type" title="Select property type">
-                           <option>For Sale</option>
-                           <option>For Rent</option>
-                       </select>
-                  </div>
+                                    <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
+                                             <select
+                                                 className="bg-transparent w-full py-3 focus:outline-none text-gray-600"
+                                                 value={listingTypeFilter}
+                                                 onChange={(e) => setListingTypeFilter(e.target.value)}
+                                                 title="Listing type"
+                                             >
+                                                     <option value="">All Listings</option>
+                                                     <option value="rent">Rent</option>
+                                                     <option value="sale">Sale</option>
+                                                     <option value="exchange">Exchange</option>
+                                             </select>
+                                    </div>
+                                    <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
+                                             <select
+                                                 className="bg-transparent w-full py-3 focus:outline-none text-gray-600"
+                                                 value={propertyTypeFilter}
+                                                 onChange={(e) => setPropertyTypeFilter(e.target.value)}
+                                                 title="Building type"
+                                             >
+                                                     <option value="">All Types</option>
+                                                     <option value="apartment">Apartment</option>
+                                                     <option value="house">House</option>
+                                                     <option value="villa">Villa</option>
+                                                     <option value="studio">Studio</option>
+                                                     <option value="land">Land</option>
+                                                     <option value="shop">Shop</option>
+                                             </select>
+                                    </div>
                   <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded font-bold transition-colors">
                       Search
                   </button>

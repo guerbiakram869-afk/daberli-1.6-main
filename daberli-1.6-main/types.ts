@@ -22,6 +22,10 @@ export interface Ad {
   rating?: number; // For Pros
   approvalStatus?: ApprovalStatus;
   postedByUserId?: string;
+  listingType?: 'rent' | 'buy' | 'sale' | 'exchange';
+  propertyType?: 'apartment' | 'house' | 'villa' | 'studio' | 'land' | 'shop';
+  jobType?: 'full-time' | 'part-time' | 'contract' | 'remote';
+  serviceType?: 'electrician' | 'plumber' | 'carpenter' | 'painter' | 'cleaning' | 'moving' | 'mechanics';
   datePosted: string;
   details?: {
     [key: string]: string | number; // Dynamic details based on category (e.g., Mileage, Sq meters)

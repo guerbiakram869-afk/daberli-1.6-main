@@ -1,8 +1,8 @@
-import React from 'react';
+import { Car, Filter, Search } from 'lucide-react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import AutoCard from '../components/cards/AutoCard';
-import { User, Ad } from '../types';
-import { Filter, Search, Car } from 'lucide-react';
+import { Ad, User } from '../types';
 
 interface CategoryPageProps {
   user: User | null;
@@ -13,7 +13,13 @@ interface CategoryPageProps {
 }
 
 const AutoPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPostAdClick, ads }) => {
-  const autoAds = ads.filter(ad => ad.category === 'auto');
+    const [listingTypeFilter, setListingTypeFilter] = useState('');
+
+    const autoAds = ads.filter(ad => {
+        if (ad.category !== 'auto') return false;
+        if (!listingTypeFilter) return true;
+        return ad.listingType === listingTypeFilter;
+    });
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -51,12 +57,18 @@ const AutoPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPo
                       <input type="text" placeholder="Make, Model, or Year..." className="bg-transparent w-full py-3 focus:outline-none text-slate-900" />
                   </div>
                   <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
-                      <label htmlFor="vehicle-type" className="sr-only">Vehicle Type</label>
-                      <select id="vehicle-type" title="Vehicle Type" className="bg-transparent w-full py-3 focus:outline-none text-gray-600">
-                          <option>All Types</option>
-                          <option>Car</option>
-                          <option>Truck</option>
-                          <option>Motorcycle</option>
+                      <label htmlFor="vehicle-listing-type" className="sr-only">Listing Type</label>
+                      <select
+                        id="vehicle-listing-type"
+                        title="Listing Type"
+                        className="bg-transparent w-full py-3 focus:outline-none text-gray-600"
+                        value={listingTypeFilter}
+                        onChange={(e) => setListingTypeFilter(e.target.value)}
+                      >
+                          <option value="">All Types</option>
+                          <option value="rent">Rent</option>
+                          <option value="sale">Sale</option>
+                          <option value="exchange">Exchange</option>
                       </select>
                   </div>
                   <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded font-bold transition-colors">

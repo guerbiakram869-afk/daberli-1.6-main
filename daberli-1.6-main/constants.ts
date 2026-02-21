@@ -72,6 +72,7 @@ export const MOCK_ADS: Ad[] = [
     image: 'https://picsum.photos/400/300',
     isVerified: true,
     isBoosted: true,
+    listingType: 'rent',
     datePosted: '2 days ago',
     details: {
       Year: 2019,
@@ -88,6 +89,8 @@ export const MOCK_ADS: Ad[] = [
     image: 'https://picsum.photos/401/300',
     isVerified: true,
     isBoosted: true,
+    listingType: 'rent',
+    propertyType: 'apartment',
     datePosted: '1 week ago',
     details: {
       Area: '85m²',
@@ -104,6 +107,7 @@ export const MOCK_ADS: Ad[] = [
     image: 'https://picsum.photos/402/300',
     isVerified: false,
     isBoosted: false,
+    jobType: 'full-time',
     datePosted: 'Just now',
     details: {
       Type: 'Full-time'
@@ -120,6 +124,7 @@ export const MOCK_ADS: Ad[] = [
     isVerified: true,
     isBoosted: true,
     rating: 4.8,
+    serviceType: 'electrician',
     datePosted: 'Active',
     details: {
       Exp: '10 Years'

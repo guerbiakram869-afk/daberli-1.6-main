@@ -120,6 +120,20 @@ const AppContent: React.FC = () => {
     }));
   };
 
+  const handleUpdateAd = (adId: string, updates: Partial<Ad>) => {
+    setAds((prevAds) =>
+      prevAds.map((ad) => (ad.id === adId ? { ...ad, ...updates } : ad))
+    );
+  };
+
+  const handleDeleteAd = (adId: string) => {
+    setAds((prevAds) => prevAds.filter((ad) => ad.id !== adId));
+    setAdMessages((prev) => {
+      const { [adId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
   const handleApproveAd = (adId: string) => {
     setAds((prevAds) =>
       prevAds.map((ad) =>
@@ -214,6 +228,8 @@ const AppContent: React.FC = () => {
                 ads={ads}
                 adMessages={adMessages}
                 onSendReply={handleSendReply}
+                onUpdateAd={handleUpdateAd}
+                onDeleteAd={handleDeleteAd}
               />
             } />
 

@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronDown, List, LogOut, MapPin, Menu, MessageSquare, PlusCircle, Search, Settings, ShieldCheck, User as UserIcon, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, List, LogOut, MapPin, Menu, MessageSquare, Moon, PlusCircle, Search, Settings, ShieldCheck, Sun, User as UserIcon, X } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { WILAYAS } from '../constants';
@@ -29,6 +29,11 @@ const Navbar: React.FC<NavbarProps> = ({
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isWilayaOpen, setIsWilayaOpen] = React.useState(false);
   const [wilayaFilter, setWilayaFilter] = React.useState('');
+  const [themeMode, setThemeMode] = React.useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const saved = window.localStorage.getItem('theme');
+    return saved === 'dark' ? 'dark' : 'light';
+  });
 
   const wilayaRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
@@ -42,6 +47,12 @@ const Navbar: React.FC<NavbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  React.useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('dark', themeMode === 'dark');
+    window.localStorage.setItem('theme', themeMode);
+  }, [themeMode]);
+
   const getTheme = () => {
     switch (variant) {
       case 'auto': return { bg: 'bg-slate-900', text: 'text-white', accent: 'text-red-500', button: 'bg-red-600 hover:bg-red-700', border: 'border-slate-800' };
@@ -54,10 +65,11 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const theme = getTheme();
   const isDark = variant !== 'default';
+  const isDarkMode = themeMode === 'dark';
 
   return (
     <nav className={`sticky top-0 z-50 ${theme.bg} ${theme.border} border-b shadow-sm transition-colors duration-300`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full pl-0 pr-4 sm:pr-6 lg:pr-8">
         <div className="flex justify-between h-16 items-center gap-4">
 
           {/* Left: Back button + Logo */}
@@ -77,19 +89,29 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
             <div className={`h-6 w-px ${isDark ? 'bg-white/20' : 'bg-gray-200'}`}></div>
+
             <Link to="/" className="flex items-center gap-2 group">
               <div className={`p-2 rounded-xl ${isDark ? 'bg-white/10' : 'bg-blue-600'} transition-colors`}>
                 <span className="font-bold text-xl text-white">D</span>
               </div>
               <div className="flex flex-col">
-                <span className={`font-bold text-xl leading-none tracking-tight ${theme.text}`}>DABERLI</span>
+                <span className={`font-bold text-xl leading-none tracking-tight ${isDarkMode ? 'text-white' : theme.text}`}>DABERLI</span>
                 {isDark && (
-                  <span className={`text-xs font-medium uppercase tracking-widest ${theme.accent}`}>
+                  <span className={`text-xs font-medium uppercase tracking-widest ${isDarkMode ? 'text-white/80' : theme.accent}`}>
                     {variant!.replace('-', ' ')}
                   </span>
                 )}
               </div>
             </Link>
+            <button
+              type="button"
+              onClick={() => setThemeMode(isDarkMode ? 'light' : 'dark')}
+              className={`inline-flex items-center justify-center h-10 w-10 rounded-full border transition-colors ${isDark ? 'border-white/10 text-white/80 hover:text-white hover:bg-white/10' : 'border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}
+              title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
           </div>
 
           {/* Desktop Navigation */}
@@ -275,6 +297,15 @@ const Navbar: React.FC<NavbarProps> = ({
           
           {/* Mobile Menu Button - Simplified */}
           <div className="md:hidden flex items-center">
+             <button
+              type="button"
+              onClick={() => setThemeMode(isDarkMode ? 'light' : 'dark')}
+              className={`mr-2 p-2 rounded-lg ${isDark ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'}`}
+              title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
              <button
               type="button"
               aria-label="Toggle menu"

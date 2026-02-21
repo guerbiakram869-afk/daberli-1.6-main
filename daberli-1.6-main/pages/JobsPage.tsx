@@ -1,5 +1,5 @@
 import { Briefcase, Search } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import JobCard from '../components/cards/JobCard';
 import { Ad, User } from '../types';
@@ -13,7 +13,13 @@ interface CategoryPageProps {
 }
 
 const JobsPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPostAdClick, ads }) => {
-  const jobAds = ads.filter(ad => ad.category === 'jobs');
+    const [jobTypeFilter, setJobTypeFilter] = useState('');
+
+    const jobAds = ads.filter(ad => {
+        if (ad.category !== 'jobs') return false;
+        if (!jobTypeFilter) return true;
+        return ad.jobType === jobTypeFilter;
+    });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,12 +57,17 @@ const JobsPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPo
                       <input type="text" placeholder="Job title, keywords..." className="bg-transparent w-full py-3 focus:outline-none text-gray-900" />
                   </div>
                   <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
-                      <select className="bg-transparent w-full py-3 focus:outline-none text-gray-600" aria-label="Job type filter">
-                          <option>All Types</option>
-                          <option>Full-Time</option>
-                          <option>Part-Time</option>
-                          <option>Remote</option>
-                          <option>Freelance</option>
+                      <select
+                        className="bg-transparent w-full py-3 focus:outline-none text-gray-600"
+                        aria-label="Job type filter"
+                        value={jobTypeFilter}
+                        onChange={(e) => setJobTypeFilter(e.target.value)}
+                      >
+                          <option value="">All Types</option>
+                          <option value="full-time">Full-time</option>
+                          <option value="part-time">Part-time</option>
+                          <option value="contract">Contract</option>
+                          <option value="remote">Remote</option>
                       </select>
                   </div>
                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded font-bold transition-colors">
@@ -66,24 +77,8 @@ const JobsPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPo
           </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
-            {/* Sidebar (Optional) */}
-            <div className="hidden lg:block w-64 flex-shrink-0 space-y-6">
-                <div>
-                   <h3 className="font-bold text-slate-900 mb-3">Job Type</h3>
-                   <div className="space-y-2">
-                       {['Full-time', 'Part-time', 'Freelance', 'Remote'].map(t => (
-                           <label key={t} className="flex items-center gap-2 text-slate-600">
-                               <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
-                               {t}
-                           </label>
-                       ))}
-                   </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+            <div>
                 <div className="flex items-center justify-between mb-4">
                      <p className="text-sm text-slate-500">Showing <span className="font-bold text-slate-900">{jobAds.length}</span> jobs</p>
                      <select className="border border-gray-300 rounded px-2 py-1 text-sm" aria-label="Sort jobs by">

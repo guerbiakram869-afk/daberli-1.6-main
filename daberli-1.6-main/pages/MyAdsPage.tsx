@@ -1,4 +1,4 @@
-import { MessageSquare, Send, ShieldAlert } from 'lucide-react';
+import { MessageSquare, Pencil, Send, ShieldAlert, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Ad, AdMessage, User } from '../types';
@@ -11,6 +11,8 @@ interface MyAdsPageProps {
   ads: Ad[];
   adMessages: Record<string, AdMessage[]>;
   onSendReply: (adId: string, text: string) => void;
+  onUpdateAd: (adId: string, updates: Partial<Ad>) => void;
+  onDeleteAd: (adId: string) => void;
 }
 
 const statusStyles: Record<string, string> = {
@@ -26,9 +28,18 @@ const MyAdsPage: React.FC<MyAdsPageProps> = ({
   onPostAdClick,
   ads,
   adMessages,
-  onSendReply
+  onSendReply,
+  onUpdateAd,
+  onDeleteAd
 }) => {
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [editAdId, setEditAdId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState({
+    title: '',
+    price: '',
+    currency: 'DZD',
+    location: ''
+  });
 
   if (!user) {
     return (
@@ -61,6 +72,39 @@ const MyAdsPage: React.FC<MyAdsPageProps> = ({
 
     onSendReply(adId, draft);
     setReplyDrafts((prev) => ({ ...prev, [adId]: '' }));
+  };
+
+  const startEditing = (ad: Ad) => {
+    setEditAdId(ad.id);
+    setEditDraft({
+      title: ad.title,
+      price: ad.price.toString(),
+      currency: ad.currency,
+      location: ad.location
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditAdId(null);
+    setEditDraft({
+      title: '',
+      price: '',
+      currency: 'DZD',
+      location: ''
+    });
+  };
+
+  const saveEditing = (adId: string) => {
+    const priceValue = Number(editDraft.price);
+    if (!editDraft.title.trim() || Number.isNaN(priceValue)) return;
+
+    onUpdateAd(adId, {
+      title: editDraft.title.trim(),
+      price: priceValue,
+      currency: editDraft.currency,
+      location: editDraft.location.trim()
+    });
+    cancelEditing();
   };
 
   return (
@@ -105,11 +149,109 @@ const MyAdsPage: React.FC<MyAdsPageProps> = ({
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusStyles[status] ?? statusStyles.pending}`}>
                           {status}
                         </span>
+                        <div className="ml-auto flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => startEditing(ad)}
+                            className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-100"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm('Delete this ad?')) {
+                                onDeleteAd(ad.id);
+                              }
+                            }}
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete
+                          </button>
+                        </div>
                       </div>
 
-                      <h2 className="text-xl font-bold text-gray-900">{ad.title}</h2>
-                      <p className="text-sm text-gray-500 mt-1">{ad.location} • {ad.datePosted}</p>
-                      <p className="text-base font-semibold text-gray-900 mt-2">{ad.price.toLocaleString()} {ad.currency}</p>
+                      {editAdId === ad.id ? (
+                        <div className="space-y-3">
+                          <div>
+                            <label className="block text-xs font-semibold text-gray-500 mb-1">Title</label>
+                            <input
+                              type="text"
+                              value={editDraft.title}
+                              onChange={(e) => setEditDraft((prev) => ({ ...prev, title: e.target.value }))}
+                              title="Edit title"
+                              placeholder="Ad title"
+                              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue"
+                            />
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="sm:col-span-2">
+                              <label className="block text-xs font-semibold text-gray-500 mb-1">Price</label>
+                              <input
+                                type="number"
+                                min="0"
+                                value={editDraft.price}
+                                onChange={(e) => setEditDraft((prev) => ({ ...prev, price: e.target.value }))}
+                                title="Edit price"
+                                placeholder="0"
+                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-500 mb-1">Unit</label>
+                              <select
+                                value={editDraft.currency}
+                                onChange={(e) => setEditDraft((prev) => ({ ...prev, currency: e.target.value }))}
+                                className="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue bg-white"
+                                title="Currency"
+                              >
+                                <option value="DZD">DZD</option>
+                                <option value="Negotiable">Negotiable</option>
+                                <option value="DZD/day">DZD/day</option>
+                                <option value="DZD/month">DZD/month</option>
+                                <option value="DZD/hour">DZD/hour</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-gray-500 mb-1">Location</label>
+                            <input
+                              type="text"
+                              value={editDraft.location}
+                              onChange={(e) => setEditDraft((prev) => ({ ...prev, location: e.target.value }))}
+                              title="Edit location"
+                              placeholder="Location"
+                              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue"
+                            />
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => saveEditing(ad.id)}
+                              className="inline-flex items-center gap-1 rounded-lg bg-daberli-blue px-3 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+                            >
+                              <Pencil className="w-4 h-4" />
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelEditing}
+                              className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100"
+                            >
+                              <X className="w-4 h-4" />
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <h2 className="text-xl font-bold text-gray-900">{ad.title}</h2>
+                          <p className="text-sm text-gray-500 mt-1">{ad.location} • {ad.datePosted}</p>
+                          <p className="text-base font-semibold text-gray-900 mt-2">{ad.price.toLocaleString()} {ad.currency}</p>
+                        </>
+                      )}
 
                       <div className="mt-5 rounded-xl border border-gray-200 bg-gray-50 p-4">
                         <p className="text-sm font-semibold text-gray-900 mb-3">Messages ({messages.length})</p>

@@ -18,6 +18,10 @@ const PostAdModal: React.FC<PostAdModalProps> = ({ isOpen, onClose, onSubmit }) 
     currency: 'DZD',
     location: '',
     image: '',
+    listingType: '' as '' | 'rent' | 'buy' | 'sale' | 'exchange',
+    propertyType: '' as '' | 'apartment' | 'house' | 'villa' | 'studio' | 'land' | 'shop',
+    jobType: '' as '' | 'full-time' | 'part-time' | 'contract' | 'remote',
+    serviceType: '' as '' | 'electrician' | 'plumber' | 'carpenter' | 'painter' | 'cleaning' | 'moving' | 'mechanics',
     description: ''
   });
 
@@ -43,6 +47,10 @@ const PostAdModal: React.FC<PostAdModalProps> = ({ isOpen, onClose, onSubmit }) 
       currency: 'DZD',
       location: '',
       image: '',
+      listingType: '',
+      propertyType: '',
+      jobType: '',
+      serviceType: '',
       description: ''
     });
   };
@@ -77,14 +85,12 @@ const PostAdModal: React.FC<PostAdModalProps> = ({ isOpen, onClose, onSubmit }) 
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageObjectUrl = URL.createObjectURL(file);
-
-    setFormData(prev => {
-      if (prev.image.startsWith('blob:')) {
-        URL.revokeObjectURL(prev.image);
-      }
-      return { ...prev, image: imageObjectUrl };
-    });
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      setFormData(prev => ({ ...prev, image: result }));
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -179,6 +185,90 @@ const PostAdModal: React.FC<PostAdModalProps> = ({ isOpen, onClose, onSubmit }) 
                     </div>
                 </div>
               </div>
+
+              {(formData.category === 'auto' || formData.category === 'real-estate') && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Listing Type</label>
+                  <select
+                    name="listingType"
+                    required
+                    value={formData.listingType}
+                    onChange={handleChange}
+                    title="Listing type"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue transition-all sm:text-sm bg-white"
+                  >
+                    <option value="">Select type</option>
+                    <option value="rent">Rent</option>
+                    <option value="sale">Sale</option>
+                    <option value="exchange">Exchange</option>
+                  </select>
+                </div>
+              )}
+
+              {formData.category === 'real-estate' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Building Type</label>
+                  <select
+                    name="propertyType"
+                    required
+                    value={formData.propertyType}
+                    onChange={handleChange}
+                    title="Building type"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue transition-all sm:text-sm bg-white"
+                  >
+                    <option value="">Select building type</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="house">House</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                    <option value="land">Land</option>
+                    <option value="shop">Shop</option>
+                  </select>
+                </div>
+              )}
+
+              {formData.category === 'jobs' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Job Type</label>
+                  <select
+                    name="jobType"
+                    required
+                    value={formData.jobType}
+                    onChange={handleChange}
+                    title="Job type"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue transition-all sm:text-sm bg-white"
+                  >
+                    <option value="">Select job type</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="contract">Contract</option>
+                    <option value="remote">Remote</option>
+                  </select>
+                </div>
+              )}
+
+              {formData.category === 'services' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Service Type</label>
+                  <select
+                    name="serviceType"
+                    required
+                    value={formData.serviceType}
+                    onChange={handleChange}
+                    title="Service type"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-daberli-blue/20 focus:border-daberli-blue transition-all sm:text-sm bg-white"
+                  >
+                    <option value="">Select service type</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="painter">Painter</option>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="moving">Moving</option>
+                    <option value="mechanics">Mechanics</option>
+                  </select>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Price */}

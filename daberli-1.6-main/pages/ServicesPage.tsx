@@ -1,5 +1,5 @@
 import { Search, Wrench } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import ServiceCard from '../components/cards/ServiceCard';
 import { Ad, User } from '../types';
@@ -13,7 +13,13 @@ interface CategoryPageProps {
 }
 
 const ServicesPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, onPostAdClick, ads }) => {
-  const serviceAds = ads.filter(ad => ad.category === 'services');
+  const [serviceTypeFilter, setServiceTypeFilter] = useState('');
+
+  const serviceAds = ads.filter(ad => {
+    if (ad.category !== 'services') return false;
+    if (!serviceTypeFilter) return true;
+    return ad.serviceType === serviceTypeFilter;
+  });
 
   return (
     <div className="min-h-screen bg-violet-50/50">
@@ -50,16 +56,25 @@ const ServicesPage: React.FC<CategoryPageProps> = ({ user, onSignIn, onSignOut, 
                       <Search className="w-5 h-5 text-slate-400 flex-shrink-0" />
                       <input type="text" placeholder="Service, expert name..." className="bg-transparent w-full py-3 focus:outline-none text-gray-900" />
                   </div>
-                  <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
+                    <div className="w-full md:w-48 bg-gray-50 rounded px-4 border border-gray-200">
                       <label htmlFor="service-filter" className="sr-only">Filter by service type</label>
-                      <select id="service-filter" title="Filter by service type" className="bg-transparent w-full py-3 focus:outline-none text-gray-600">
-                          <option>All Services</option>
-                          <option>Plumbing</option>
-                          <option>Electrical</option>
-                          <option>Moving</option>
-                          <option>Design</option>
+                      <select
+                      id="service-filter"
+                      title="Filter by service type"
+                      className="bg-transparent w-full py-3 focus:outline-none text-gray-600"
+                      value={serviceTypeFilter}
+                      onChange={(e) => setServiceTypeFilter(e.target.value)}
+                      >
+                        <option value="">All Services</option>
+                        <option value="electrician">Electrician</option>
+                        <option value="plumber">Plumber</option>
+                        <option value="carpenter">Carpenter</option>
+                        <option value="painter">Painter</option>
+                        <option value="cleaning">Cleaning</option>
+                        <option value="moving">Moving</option>
+                        <option value="mechanics">Mechanics</option>
                       </select>
-                  </div>
+                    </div>
                   <button className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3 rounded font-bold transition-colors">
                       Find Pros
                   </button>
